@@ -1,0 +1,10 @@
+name = "webcenter"
+main = "src/index.ts"
+compatibility_date = "2023-05-18"
+
+account_id = "9add4187b89e0aac0e5a951c893549dd"
+workers_dev = true
+
+[[r2_buckets]]
+binding = 'storageBucket' # <~ valid JavaScript variable name
+bucket_name = 'sis-webcenter-tracks'
