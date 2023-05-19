@@ -10,6 +10,7 @@
 
 import { Hono } from "hono";
 import { cors } from "hono/cors";
+import { poweredBy } from "hono/powered-by"
 import * as auth from "./authorization";
 import webcenter from "./webcenter";
 
@@ -22,7 +23,7 @@ const dryRunAuth = true;
 
 const app = new Hono<{ Bindings: AppEnv }>();
 
-app.use("*", cors());
+app.use("*", cors(), poweredBy());
 
 app.get("/", (c) => c.redirect("https://www.youtube.com/watch?v=FfnQemkjPjM"));
 
