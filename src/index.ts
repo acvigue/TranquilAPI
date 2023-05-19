@@ -10,7 +10,7 @@
 
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { poweredBy } from "hono/powered-by"
+import { poweredBy } from "hono/powered-by";
 import * as auth from "./authorization";
 import webcenter from "./webcenter";
 
@@ -91,39 +91,38 @@ app.post("/auth/getAccessToken", async (c) => {
     return c.json({ error: "Malformed request" }, 400);
   }
 
+  let payload;
   try {
-    const payload = await auth.verifyRefreshToken(
-      body.refreshToken,
-      c.env.secretKey
-    );
-
-    try {
-      let webcenterAccessToken = "test";
-      if (!dryRunAuth) {
-        const authUserResponse = await webcenter.auth_user({
-          email: payload.email,
-          password: payload.password,
-        });
-        webcenterAccessToken = authUserResponse.auth_token;
-      }
-
-      const accessTokenPayload = {
-        webcenterAccessToken: webcenterAccessToken,
-        credentials: body.refreshToken,
-      };
-
-      const accessToken = await auth.generateAccessToken(
-        accessTokenPayload,
-        c.env.secretKey,
-        "1h"
-      );
-
-      return c.json({ accessToken: accessToken }, 200);
-    } catch (e) {
-      return c.json({ error: getErrorMessage(e) }, 500);
-    }
+    payload = await auth.verifyRefreshToken(body.refreshToken, c.env.secretKey);
   } catch (e) {
     return c.json({ error: "Unauthorized" }, 401);
+  }
+
+  try {
+    let webcenterAccessToken = "test";
+
+    if (!dryRunAuth) {
+      const authUserResponse = await webcenter.auth_user({
+        email: payload.email,
+        password: payload.password,
+      });
+      webcenterAccessToken = authUserResponse.auth_token;
+    }
+
+    const accessTokenPayload = {
+      webcenterAccessToken: webcenterAccessToken,
+      credentials: body.refreshToken,
+    };
+
+    const accessToken = await auth.generateAccessToken(
+      accessTokenPayload,
+      c.env.secretKey,
+      "1h"
+    );
+
+    return c.json({ accessToken: accessToken }, 200);
+  } catch (e) {
+    return c.json({ error: getErrorMessage(e) }, 500);
   }
 });
 
