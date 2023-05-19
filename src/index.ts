@@ -1,5 +1,5 @@
 /**
- * Welcome to Cloudflare Workers! This is your first worker.
+ * Welcome to Cloudflare Workers! This is *not* your first worker.
  *
  * - Run `wrangler dev src/index.ts` in your terminal to start a development server
  * - Open a browser tab at http://localhost:8787/ to see your worker in action
