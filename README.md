@@ -1,11 +1,11 @@
 
-# webcenter
+# TranquilAPI
 
-A proxy for caching and limiting requests to the Sisyphus Webcenter cloud service.
+The online pattern library for the Tranquil drawing robot project
 
 Written in TypeScript and hosted on Cloudflare Workers with the blazing-fast Hono library.
 
 ### Works with
-- [OasisControl2](https://github.com/acvigue/OasisControl2) - Vue frontend for controlling kinetic art plotters
-- [OasisFirmware](https://github.com/acvigue/RBotFirmware) - Firmware for said plotters - ESP32 based!
+- [TranquilVue](https://github.com/acvigue/TranquilVue) - Vue frontend
+- [TranquilFirmware](https://github.com/acvigue/TranquilFirmware) - ESP32 firmware
 
