@@ -1,28 +1,14 @@
 import { Context, MiddlewareHandler } from "hono";
 import * as jose from "jose";
 
-export interface RefreshTokenPayload {
+export interface TokenPayload {
   [key: string]: any;
   email: string;
   password: string;
-  sisbot: {
-    id: string;
-    mac: string;
-  };
 }
 
-export interface AccessTokenPayload {
-  [key: string]: any;
-  webcenterAccessToken: string;
-  credentials: string;
-}
-
-export interface AuthPayload extends RefreshTokenPayload {
-  webcenterAccessToken: string;
-}
-
-export const getPayload = (c: Context): AuthPayload | null => {
-  const idToken = c.get("auth-payload");
+export const getPayload = (c: Context): TokenPayload | null => {
+  const idToken = c.get("token-payload");
   return idToken;
 };
 
@@ -31,37 +17,27 @@ export const authMiddleware = (): MiddlewareHandler => {
     const secret = c.env.secretKey as string;
 
     if (!c.req.headers.has("Authorization")) {
-      return new Response(null, {
+      return new Response("Forbidden", {
         status: 403,
       });
     }
 
     const token = c.req.headers.get("Authorization")!.split(" ")[1];
     try {
-      const payload = await verifyAccessToken(token, secret);
+      const payload = await verifyToken(token, secret);
 
-      const credentialsPayload = await verifyRefreshToken(
-        payload.credentials,
-        secret
-      );
-
-      const authPayload = {
-        ...credentialsPayload,
-        webcenterAccessToken: payload.webcenterAccessToken,
-      };
-
-      c.set("auth-payload", authPayload);
+      c.set("token-payload", payload);
       await next();
     } catch (e) {
-      return new Response(null, {
+      return new Response("Unauthorized", {
         status: 401,
       });
     }
   };
 };
 
-export const generateRefreshToken = async (
-  payload: RefreshTokenPayload,
+export const generateToken = async (
+  payload: TokenPayload,
   secret: string,
   expiry: string
 ): Promise<string> => {
@@ -78,28 +54,10 @@ export const generateRefreshToken = async (
   return token;
 };
 
-export const generateAccessToken = async (
-  payload: AccessTokenPayload,
-  secret: string,
-  expiry: string
-): Promise<string> => {
-  const sec = jose.base64url.decode(secret);
-
-  const jwt = await new jose.SignJWT(payload)
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setIssuer("wcp")
-    .setAudience("wcp")
-    .setExpirationTime(expiry)
-    .sign(sec);
-
-  return jwt;
-};
-
-export const verifyRefreshToken = async function (
+export const verifyToken = async function (
   token: string,
   secret: string
-): Promise<RefreshTokenPayload> {
+): Promise<TokenPayload> {
   const sec = jose.base64url.decode(secret);
 
   const { payload } = await jose.jwtDecrypt(token, sec, {
@@ -111,19 +69,5 @@ export const verifyRefreshToken = async function (
     throw new Error("Token expired, please refresh.");
   }
 
-  return payload as RefreshTokenPayload;
-};
-
-export const verifyAccessToken = async (
-  token: string,
-  secret: string
-): Promise<AccessTokenPayload> => {
-  const sec = jose.base64url.decode(secret);
-
-  const { payload, protectedHeader } = await jose.jwtVerify(token, sec, {
-    issuer: "wcp",
-    audience: "wcp",
-  });
-
-  return payload as AccessTokenPayload;
+  return payload as TokenPayload;
 };
