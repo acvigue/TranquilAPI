@@ -45,7 +45,7 @@ const app = new Hono<{ Bindings: AppEnv }>();
 
 app.use("*", cors(), poweredBy());
 
-app.get("/", (c) => c.redirect("https://github.com/acvigue/TranquilAPI"));
+app.get("/", (c) => c.redirect("https://www.youtube.com/watch?v=FfnQemkjPjM"));
 
 app.post("/playlists", auth.authMiddleware(), async (c) => {
   const newPlaylist = await c.req.json<Playlist>();
