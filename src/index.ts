@@ -164,57 +164,6 @@ app.post("/auth", async (c) => {
   });
 });
 
-app.get("/ota/:version/:fstype", async (c) => {
-  const version = c.req.param("version");
-  const fstype = c.req.param("fstype");
-
-  if (fstype !== "spiffs" && fstype !== "firmware") {
-    return c.json({ error: "bad fs" }, 400);
-  }
-
-  const objectName = `firmware/${version}/${fstype}.bin`;
-
-  const object = await c.env.tranquilStorage.get(objectName);
-  if (object === null) {
-    return c.json({ error: "not_found", object: objectName }, 404);
-  }
-
-  const objectContent = await object.text();
-  c.header("Cache-Control", "max-age=31536000");
-  c.header("Content-disposition", "attachment; filename=spiffs.bin");
-  c.header("Content-Type", "application/octet-stream");
-  return c.body(objectContent);
-});
-
-app.get("/ota/manifest", async (c) => {
-  const firmwareObjects = await c.env.tranquilStorage.list({
-    prefix: 'firmware'
-  });
-
-  let objectNames = firmwareObjects.objects.map((object) => object.key);
-  objectNames = objectNames.filter((v) => {
-    if(v.includes(".bin") || v === 'firmware/') {
-      return false;
-    }
-    return true;
-  })
-  objectNames = objectNames.map((value) => {
-    return value.split("/")[1];
-  })
-  objectNames = [...new Set(objectNames)]
-
-  const url = new URL(c.req.url);
-  const version = latestSemver(objectNames);
-  return c.json({
-    type: "Tranquil",
-    version: version,
-    host: url.hostname,
-    port: 443,
-    bin: `/ota/${version}/firmware`,
-    spiffs: `/ota/${version}/spiffs`,
-  });
-});
-
 async function getPatterns(c: Context): Promise<Pattern[]> {
   const objectName = `patterns.json`;
   const object = await c.env.tranquilStorage.get(objectName);
