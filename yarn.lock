@@ -3,9 +3,9 @@
 
 
 "@cloudflare/workers-types@^4.20230511.0":
-  version "4.20230511.0"
-  resolved "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-4.20230511.0.tgz"
-  integrity sha512-Br4i/8+t60HDJIo8o7O9Rrmp03bhdejRW9klb0bK9EfG5Ii7qz5G3PJO12gUz+Vu9m1v9tZ9KOh3Gg8oshXtug==
+  version "4.20230717.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20230717.0.tgz#27233bb6734c12876d09c7c76d55fc0a9089ea35"
+  integrity sha512-OJWM1s0n9Il+GjfHvZhEcUGC+qY9IsijMtzRBDRpwSUR2jTy1WdjS9+SEh7sJlNQX2WzHQCgJMGjH2lI/Tf+tQ==
 
 "@types/node@^17.0.40":
   version "17.0.45"
@@ -13,9 +13,9 @@
   integrity sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==
 
 "@types/node@^20.2.0":
-  version "20.2.0"
-  resolved "https://registry.npmjs.org/@types/node/-/node-20.2.0.tgz"
-  integrity sha512-3iD2jaCCziTx04uudpJKwe39QxXgSUnpxXSvRQjRvHPxFQfmfP4NXIm/NURVeNlTCc+ru4WqjYGTmpXrW9uMlw==
+  version "20.4.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.2.tgz#129cc9ae69f93824f92fac653eebfb4812ab4af9"
+  integrity sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -78,9 +78,9 @@ form-data@^4.0.0:
     mime-types "^2.1.12"
 
 hono@^3.1.8:
-  version "3.1.8"
-  resolved "https://registry.npmjs.org/hono/-/hono-3.1.8.tgz"
-  integrity sha512-7UZQWuQaqn8MENla09Jdb28qiR5uXii4xR/TNQuVNxZ3+T+ZixWiQUpJG85BXNqhJ5s1SkPbLGjbc3L5wKsv5g==
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.3.1.tgz#05617491106ceca4cc1c3590cbf1ffe4f8b197db"
+  integrity sha512-MlpVOp+oDvWjfLZjZNBF5p2d+X6kmpHdHT1BjY7J4Zn3XOscK01lt4so0Gsm9F7pZFImJG7eAMgOKZ8VSzUPDA==
 
 jose@^4.14.4:
   version "4.14.4"
@@ -134,9 +134,9 @@ to-semver@^4.0.0:
     semver "^7.3.5"
 
 typescript@^5.0.4:
-  version "5.0.4"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-5.0.4.tgz"
-  integrity sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"
+  integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
 
 yallist@^4.0.0:
   version "4.0.0"
