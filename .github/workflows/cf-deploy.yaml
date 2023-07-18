@@ -11,8 +11,15 @@ jobs:
     name: Deploy repo
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
-      - name: Publish
-        uses: cloudflare/wrangler-action@2.0.0
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+      - name: Install Dependencies
+        uses: borales/actions-yarn@v4
         with:
-          apiToken: ${{ secrets.CF_API_TOKEN }}
+          cmd: install
+      - name: Build & Deploy
+        run: npx wrangler deploy
+        env:
+          CF_ACCOUNT_ID: ${ secrets.CF_ACCOUNT_ID }
+          CF_API_TOKEN: ${ secrets.CF_API_TOKEN }
