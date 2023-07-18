@@ -11,7 +11,7 @@
 import { Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { poweredBy } from "hono/powered-by";
-import latestSemver from 'latest-semver';
+import latestSemver from "latest-semver";
 import * as auth from "./authorization";
 
 export interface Pattern {
