@@ -10,7 +10,6 @@ import { Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { poweredBy } from "hono/powered-by";
 import * as auth from "./authorization";
-import * as bcrypt from "bcrypt";
 
 export interface Pattern {
   uuid: string;
@@ -174,12 +173,7 @@ app.post("/auth", async (c) => {
     return user.email === body.email;
   });
 
-  if (!thisUser) {
-    return c.json({ error: "Invalid email or password" }, 401);
-  }
-
-  const passMatch = await bcrypt.compare(body.password, thisUser.password);
-  if (!passMatch) {
+  if (!thisUser || body.password !== thisUser.password) {
     return c.json({ error: "Invalid email or password" }, 401);
   }
 
@@ -212,12 +206,6 @@ async function getPlaylists(c: Context): Promise<Playlist[]> {
   }
   const objectContent = await object.json();
   return objectContent as Playlist[];
-}
-
-async function passwordHash(password: string) {
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(password, salt);
-  return hash;
 }
 
 export default app;
