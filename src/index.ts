@@ -44,7 +44,7 @@ app.get("/", (c) => c.redirect("https://www.youtube.com/watch?v=FfnQemkjPjM"));
 
 app.post("/playlists", auth.authMiddleware(), async (c) => {
   const tokenPayload = auth.getPayload(c);
-  if (!tokenPayload.user.admin) {
+  if (!tokenPayload.user.is_admin) {
     return c.json({ error: "User not admin!" }, 403);
   }
 
@@ -88,7 +88,7 @@ app.get("/playlists/:uuid", auth.authMiddleware(), async (c) => {
 
 app.post("/patterns", auth.authMiddleware(), async (c) => {
   const tokenPayload = auth.getPayload(c);
-  if (!tokenPayload.user.admin) {
+  if (!tokenPayload.user.is_admin) {
     return c.json({ error: "User not admin!" }, 403);
   }
 

@@ -10,7 +10,7 @@ export interface User {
   email: string;
   password: string;
   uuid: string;
-  admin: boolean;
+  is_admin: boolean;
 }
 
 export const getPayload = (c: Context): TokenPayload => {
