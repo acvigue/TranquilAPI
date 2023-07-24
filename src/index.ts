@@ -1,21 +1,19 @@
-/**
- * Welcome to Cloudflare Workers! This is *not* your first worker.
- *
- * - Run `wrangler dev src/index.ts` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `wrangler publish src/index.ts --name my-worker` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+/*
+    TranquilAPI Worker
+    Part of the Tranquil Project
+
+    Copyright 2023 - Aiden Vigue
+    Licensed under GNU GPL-v3
+*/
 
 import { Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { poweredBy } from "hono/powered-by";
-import latestSemver from "latest-semver";
 import * as auth from "./authorization";
+import * as bcrypt from "bcrypt";
 
 export interface Pattern {
-  uuid: string; //uuid
+  uuid: string;
   name: string;
   date: string;
 }
@@ -37,8 +35,6 @@ export interface Playlist {
 type AppEnv = {
   tranquilStorage: R2Bucket;
   secretKey: string;
-  email: string;
-  password: string;
 };
 
 const app = new Hono<{ Bindings: AppEnv }>();
@@ -48,6 +44,11 @@ app.use("*", cors(), poweredBy());
 app.get("/", (c) => c.redirect("https://www.youtube.com/watch?v=FfnQemkjPjM"));
 
 app.post("/playlists", auth.authMiddleware(), async (c) => {
+  const tokenPayload = auth.getPayload(c);
+  if (!tokenPayload.user.admin) {
+    return c.json({ error: "User not admin!" }, 403);
+  }
+
   const newPlaylist = await c.req.json<Playlist>();
   const playlists = await getPlaylists(c);
   playlists.unshift(newPlaylist);
@@ -87,6 +88,11 @@ app.get("/playlists/:uuid", auth.authMiddleware(), async (c) => {
 });
 
 app.post("/patterns", auth.authMiddleware(), async (c) => {
+  const tokenPayload = auth.getPayload(c);
+  if (!tokenPayload.user.admin) {
+    return c.json({ error: "User not admin!" }, 403);
+  }
+
   const newPatternBody = await c.req.json<PostPatternBody>();
 
   try {
@@ -147,17 +153,41 @@ app.get("/patterns/:uuid/data", auth.authMiddleware(), async (c) => {
 });
 
 app.post("/auth", async (c) => {
-  const body = await c.req.json<auth.TokenPayload>();
+  interface AuthRequestBody {
+    email: string;
+    password: string;
+  }
+
+  const body = await c.req.json<AuthRequestBody>();
 
   if (!body.email || !body.password) {
     return c.json({ error: "Malformed request" }, 400);
   }
 
-  if (body.email !== c.env.email || body.password !== c.env.password) {
+  const usersFile = await c.env.tranquilStorage.get("users.json");
+  if (!usersFile) {
+    return c.json({ error: "Couldn't retrieve users database!" }, 400);
+  }
+  const users = (await usersFile.json()) as auth.User[];
+
+  const thisUser = users.find((user) => {
+    return user.email === body.email;
+  });
+
+  if (!thisUser) {
     return c.json({ error: "Invalid email or password" }, 401);
   }
 
-  const token = await auth.generateToken(body, c.env.secretKey, "10y");
+  const passMatch = await bcrypt.compare(body.password, thisUser.password);
+  if (!passMatch) {
+    return c.json({ error: "Invalid email or password" }, 401);
+  }
+
+  const tokenPayload = {
+    user: thisUser,
+  };
+
+  const token = await auth.generateToken(tokenPayload, c.env.secretKey, "10y");
 
   return c.json({
     token,
@@ -182,6 +212,12 @@ async function getPlaylists(c: Context): Promise<Playlist[]> {
   }
   const objectContent = await object.json();
   return objectContent as Playlist[];
+}
+
+async function passwordHash(password: string) {
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  return hash;
 }
 
 export default app;

@@ -3,12 +3,18 @@ import * as jose from "jose";
 
 export interface TokenPayload {
   [key: string]: any;
-  email: string;
-  password: string;
+  user: User;
 }
 
-export const getPayload = (c: Context): TokenPayload | null => {
-  const idToken = c.get("token-payload");
+export interface User {
+  email: string;
+  password: string;
+  uuid: string;
+  admin: boolean;
+}
+
+export const getPayload = (c: Context): TokenPayload => {
+  const idToken = JSON.parse(c.get("token-payload")!);
   return idToken;
 };
 
@@ -26,7 +32,7 @@ export const authMiddleware = (): MiddlewareHandler => {
     try {
       const payload = await verifyToken(token, secret);
 
-      c.set("token-payload", payload);
+      c.set("token-payload", JSON.stringify(payload));
       await next();
     } catch (e) {
       return new Response("Unauthorized", {
