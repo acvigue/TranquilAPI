@@ -16,13 +16,19 @@ export const authMiddleware = (): MiddlewareHandler => {
   return async (c, next) => {
     const secret = c.env.secretKey as string;
 
-    if (!c.req.headers.has("Authorization")) {
+    let token = "";
+    if (!c.req.headers.has("Authorization") && !c.req.query("auth_token")) {
       return new Response("Forbidden", {
         status: 403,
       });
     }
 
-    const token = c.req.headers.get("Authorization")!.split(" ")[1];
+    if (c.req.headers.has("Authorization")) {
+      token = c.req.headers.get("Authorization")!.split(" ")[1];
+    } else {
+      token = c.req.query("auth_token")!;
+    }
+
     try {
       const payload = await verifyToken(token, secret);
 
