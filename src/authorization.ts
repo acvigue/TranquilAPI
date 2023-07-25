@@ -1,16 +1,10 @@
 import { Context, MiddlewareHandler } from "hono";
+import { User } from "./types";
 import * as jose from "jose";
 
 export interface TokenPayload {
   [key: string]: any;
   user: User;
-}
-
-export interface User {
-  email: string;
-  password: string;
-  uuid: string;
-  is_admin: boolean;
 }
 
 export const getPayload = (c: Context): TokenPayload => {
@@ -31,6 +25,12 @@ export const authMiddleware = (): MiddlewareHandler => {
     const token = c.req.headers.get("Authorization")!.split(" ")[1];
     try {
       const payload = await verifyToken(token, secret);
+
+      if (!payload.user.is_active) {
+        return new Response("User inactive", {
+          status: 401,
+        });
+      }
 
       c.set("token-payload", JSON.stringify(payload));
       await next();

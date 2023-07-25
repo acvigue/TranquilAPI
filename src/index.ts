@@ -10,37 +10,16 @@ import { Context, Hono } from "hono";
 import { cors } from "hono/cors";
 import { poweredBy } from "hono/powered-by";
 import * as auth from "./authorization";
-
-export interface Pattern {
-  uuid: string;
-  name: string;
-  date: string;
-}
-
-interface PostPatternBody {
-  data: string;
-  pattern: Pattern;
-}
-
-export interface Playlist {
-  uuid: string;
-  name: string;
-  description: string;
-  patterns: string[];
-  featured_pattern: string;
-  date: string;
-}
+import { Pattern, Playlist, User } from "./types";
 
 type AppEnv = {
-  tranquilStorage: R2Bucket;
+  bucket: R2Bucket;
   secretKey: string;
 };
 
 const app = new Hono<{ Bindings: AppEnv }>();
 
 app.use("*", cors(), poweredBy());
-
-app.get("/", (c) => c.redirect("https://www.youtube.com/watch?v=FfnQemkjPjM"));
 
 app.post("/playlists", auth.authMiddleware(), async (c) => {
   const tokenPayload = auth.getPayload(c);
@@ -58,10 +37,7 @@ app.post("/playlists", auth.authMiddleware(), async (c) => {
 
   const objectName = `playlists.json`;
   try {
-    await c.env.tranquilStorage.put(
-      objectName,
-      JSON.stringify(playlistsUnique)
-    );
+    await c.env.bucket.put(objectName, JSON.stringify(playlistsUnique));
   } catch (e) {
     return c.json({ error: "R2 write error" }, 500);
   }
@@ -87,6 +63,11 @@ app.get("/playlists/:uuid", auth.authMiddleware(), async (c) => {
 });
 
 app.post("/patterns", auth.authMiddleware(), async (c) => {
+  interface PostPatternBody {
+    data: string;
+    pattern: Pattern;
+  }
+
   const tokenPayload = auth.getPayload(c);
   if (!tokenPayload.user.is_admin) {
     return c.json({ error: "User not admin!" }, 403);
@@ -96,7 +77,7 @@ app.post("/patterns", auth.authMiddleware(), async (c) => {
 
   try {
     const objectName = `patterns/${newPatternBody.pattern.uuid}`;
-    await c.env.tranquilStorage.put(objectName, newPatternBody.data);
+    await c.env.bucket.put(objectName, newPatternBody.data);
   } catch (e) {
     console.log(e);
     return c.json({ error: "Couldn't store pattern!" }, 404);
@@ -111,7 +92,7 @@ app.post("/patterns", auth.authMiddleware(), async (c) => {
 
   const objectName = `patterns.json`;
   try {
-    await c.env.tranquilStorage.put(objectName, JSON.stringify(patternsUnique));
+    await c.env.bucket.put(objectName, JSON.stringify(patternsUnique));
   } catch (e) {
     return c.json({ error: "R2 write error" }, 500);
   }
@@ -139,7 +120,7 @@ app.get("/patterns/:uuid", auth.authMiddleware(), async (c) => {
 app.get("/patterns/:uuid/data", auth.authMiddleware(), async (c) => {
   const pattern_uuid = c.req.param("uuid");
   const objectName = `patterns/${pattern_uuid}`;
-  const object = await c.env.tranquilStorage.get(objectName);
+  const object = await c.env.bucket.get(objectName);
   if (object === null) {
     return c.json({ error: "Not Found" }, 404);
   }
@@ -163,11 +144,11 @@ app.post("/auth", async (c) => {
     return c.json({ error: "Malformed request" }, 400);
   }
 
-  const usersFile = await c.env.tranquilStorage.get("users.json");
+  const usersFile = await c.env.bucket.get("users.json");
   if (!usersFile) {
     return c.json({ error: "Couldn't retrieve users database!" }, 400);
   }
-  const users = (await usersFile.json()) as auth.User[];
+  const users = (await usersFile.json()) as User[];
 
   const thisUser = users.find((user) => {
     return user.email === body.email;
@@ -190,7 +171,7 @@ app.post("/auth", async (c) => {
 
 async function getPatterns(c: Context): Promise<Pattern[]> {
   const objectName = `patterns.json`;
-  const object = await c.env.tranquilStorage.get(objectName);
+  const object = await c.env.bucket.get(objectName);
   if (object === null) {
     throw new Error("Object not found");
   }
@@ -200,12 +181,16 @@ async function getPatterns(c: Context): Promise<Pattern[]> {
 
 async function getPlaylists(c: Context): Promise<Playlist[]> {
   const objectName = `playlists.json`;
-  const object = await c.env.tranquilStorage.get(objectName);
+  const object = await c.env.bucket.get(objectName);
   if (object === null) {
     throw new Error("Object not found");
   }
   const objectContent = await object.json();
   return objectContent as Playlist[];
 }
+
+app.notFound((c) => {
+  return c.redirect("https://www.youtube.com/watch?v=FfnQemkjPjM");
+});
 
 export default app;
