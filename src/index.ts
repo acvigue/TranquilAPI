@@ -3,6 +3,7 @@ import { cors } from "hono/cors";
 import { poweredBy } from "hono/powered-by";
 import * as auth from "./authorization";
 import { Pattern, Playlist, User } from "./types";
+import { Buffer } from "node:buffer";
 
 type AppEnv = {
   bucket: R2Bucket;
@@ -142,7 +143,7 @@ app.get("/patterns/:uuid/thumb.png", auth.authMiddleware(), async (c) => {
     return c.json({ error: "Not Found" }, 404);
   }
 
-  const objectContent = await object.text();
+  const objectContent = await object.arrayBuffer();
   c.header("Content-Type", "image/png");
   c.header("Cache-Control", "max-age=31536000");
 
