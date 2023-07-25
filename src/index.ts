@@ -56,8 +56,9 @@ app.get("/playlists/:uuid", auth.authMiddleware(), async (c) => {
 
 app.post("/patterns", auth.authMiddleware(), async (c) => {
   interface PostPatternBody {
-    data: string;
+    patternData: string;
     pattern: Pattern;
+    thumbData: string;
   }
 
   const tokenPayload = auth.getPayload(c);
@@ -69,10 +70,19 @@ app.post("/patterns", auth.authMiddleware(), async (c) => {
 
   try {
     const objectName = `patterns/${newPatternBody.pattern.uuid}`;
-    await c.env.bucket.put(objectName, newPatternBody.data);
+    await c.env.bucket.put(objectName, newPatternBody.patternData);
   } catch (e) {
     console.log(e);
-    return c.json({ error: "Couldn't store pattern!" }, 404);
+    return c.json({ error: "Couldn't store pattern!" }, 500);
+  }
+
+  try {
+    const objectName = `patterns/thumbs/${newPatternBody.pattern.uuid}.png`;
+    const buf = Buffer.from(newPatternBody.thumbData, "base64");
+    await c.env.bucket.put(objectName, buf);
+  } catch (e) {
+    console.log(e);
+    return c.json({ error: "Couldn't store pattern thumbnail!" }, 500);
   }
 
   const patterns = await getPatterns(c);
@@ -119,6 +129,21 @@ app.get("/patterns/:uuid/data", auth.authMiddleware(), async (c) => {
 
   const objectContent = await object.text();
   c.header("Content-Type", "text/plain");
+  c.header("Cache-Control", "max-age=31536000");
+
+  return c.body(objectContent);
+});
+
+app.get("/patterns/:uuid/thumb.png", auth.authMiddleware(), async (c) => {
+  const pattern_uuid = c.req.param("uuid");
+  const objectName = `patterns/thumbs/${pattern_uuid}.png`;
+  const object = await c.env.bucket.get(objectName);
+  if (object === null) {
+    return c.json({ error: "Not Found" }, 404);
+  }
+
+  const objectContent = await object.text();
+  c.header("Content-Type", "image/png");
   c.header("Cache-Control", "max-age=31536000");
 
   return c.body(objectContent);
@@ -182,7 +207,8 @@ async function getPlaylists(c: Context): Promise<Playlist[]> {
 }
 
 app.notFound((c) => {
-  return c.html(`
+  return c.html(
+    `
   <!DOCTYPE html>
 <!--[if lt IE 7]> <html class="no-js ie6 oldie" lang="en-US"> <![endif]-->
 <!--[if IE 7]>    <html class="no-js ie7 oldie" lang="en-US"> <![endif]-->
@@ -432,7 +458,9 @@ app.notFound((c) => {
         </div>
     </div>
 </body>
-</html>`, 200);
+</html>`,
+    200
+  );
 });
 
 export default app;
