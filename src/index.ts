@@ -21,6 +21,8 @@ app.post("/playlists", auth.authMiddleware(), async (c) => {
   }
 
   const newPlaylist = await c.req.json<Playlist>();
+  newPlaylist.uuid = newPlaylist.uuid.toLowerCase();
+  
   const playlists = await getPlaylists(c);
   playlists.unshift(newPlaylist);
 
@@ -68,6 +70,7 @@ app.post("/patterns", auth.authMiddleware(), async (c) => {
   }
 
   const newPatternBody = await c.req.json<PostPatternBody>();
+  newPatternBody.pattern.uuid = newPatternBody.pattern.uuid.toLowerCase();
 
   try {
     const objectName = `patterns/${newPatternBody.pattern.uuid}`;
