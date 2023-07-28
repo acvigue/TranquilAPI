@@ -1,4 +1,4 @@
-import { Context, Hono } from "hono";
+import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { poweredBy } from "hono/powered-by";
 import * as auth from "./authorization";
@@ -7,6 +7,7 @@ import { Buffer } from "node:buffer";
 
 type AppEnv = {
   bucket: R2Bucket;
+  database: D1Database;
   secretKey: string;
 };
 
@@ -14,109 +15,49 @@ const app = new Hono<{ Bindings: AppEnv }>();
 
 app.use("*", cors(), poweredBy());
 
-app.post("/playlists", auth.authMiddleware(), async (c) => {
-  const tokenPayload = auth.getPayload(c);
-  if (!tokenPayload.user.is_admin) {
-    return c.json({ error: "User not admin!" }, 403);
-  }
-
-  const newPlaylist = await c.req.json<Playlist>();
-  newPlaylist.uuid = newPlaylist.uuid.toLowerCase();
-  
-  const playlists = await getPlaylists(c);
-  playlists.unshift(newPlaylist);
-
-  const playlistsUnique = [
-    ...new Map(playlists.map((playlist) => [playlist.uuid, playlist])).values(),
-  ];
-
-  const objectName = `playlists.json`;
-  try {
-    await c.env.bucket.put(objectName, JSON.stringify(playlistsUnique));
-  } catch (e) {
-    return c.json({ error: "R2 write error" }, 500);
-  }
-  return c.json({ uuid: newPlaylist.uuid });
+app.get("/playlists", auth.authMiddleware(), async (c) => {
+  const stmt = c.env.database.prepare("SELECT * FROM playlists");
+  let { results }: { results: Playlist[] } = await stmt.all();
+  results = results.map((playlist) => {
+    playlist.patterns = JSON.parse(playlist.patterns as unknown as string);
+    return playlist;
+  });
+  return c.json(results);
 });
 
-app.get("/playlists", auth.authMiddleware(), async (c) => {
-  const playlists = await getPlaylists(c);
-  return c.json(playlists);
+app.get("/patterns", auth.authMiddleware(), async (c) => {
+  const stmt = c.env.database.prepare("SELECT * FROM patterns");
+  let { results }: { results: Pattern[] } = await stmt.all();
+  return c.json(results);
 });
 
 app.get("/playlists/:uuid", auth.authMiddleware(), async (c) => {
-  const playlist_uuid = c.req.param("uuid");
-  const playlists = await getPlaylists(c);
-  const playlist = playlists.find((v) => v.uuid === playlist_uuid);
+  const playlistUUID = c.req.param("uuid");
+
+  const stmt = c.env.database
+    .prepare("SELECT * FROM playlists WHERE uuid=?")
+    .bind(playlistUUID);
+  let playlist: Playlist | null = await stmt.first();
 
   if (!playlist) {
-    return c.json({ error: "Not Found" }, 404);
+    return c.text(`Playlist ${playlistUUID} does not exist!`, 404);
   }
+  playlist.patterns = JSON.parse(playlist.patterns as unknown as string);
 
   c.header("Cache-Control", "max-age=31536000");
   return c.json(playlist);
 });
 
-app.post("/patterns", auth.authMiddleware(), async (c) => {
-  interface PostPatternBody {
-    patternData: string;
-    pattern: Pattern;
-    thumbData: string;
-  }
-
-  const tokenPayload = auth.getPayload(c);
-  if (!tokenPayload.user.is_admin) {
-    return c.json({ error: "User not admin!" }, 403);
-  }
-
-  const newPatternBody = await c.req.json<PostPatternBody>();
-  newPatternBody.pattern.uuid = newPatternBody.pattern.uuid.toLowerCase();
-
-  try {
-    const objectName = `patterns/${newPatternBody.pattern.uuid}`;
-    await c.env.bucket.put(objectName, newPatternBody.patternData);
-  } catch (e) {
-    console.log(e);
-    return c.json({ error: "Couldn't store pattern!" }, 500);
-  }
-
-  try {
-    const objectName = `patterns/thumbs/${newPatternBody.pattern.uuid}.png`;
-    const buf = Buffer.from(newPatternBody.thumbData, "base64");
-    await c.env.bucket.put(objectName, buf);
-  } catch (e) {
-    console.log(e);
-    return c.json({ error: "Couldn't store pattern thumbnail!" }, 500);
-  }
-
-  const patterns = await getPatterns(c);
-  patterns.unshift(newPatternBody.pattern);
-
-  const patternsUnique = [
-    ...new Map(patterns.map((pattern) => [pattern.uuid, pattern])).values(),
-  ];
-
-  const objectName = `patterns.json`;
-  try {
-    await c.env.bucket.put(objectName, JSON.stringify(patternsUnique));
-  } catch (e) {
-    return c.json({ error: "R2 write error" }, 500);
-  }
-  return c.json({ uuid: newPatternBody.pattern.uuid });
-});
-
-app.get("/patterns", auth.authMiddleware(), async (c) => {
-  const patterns = await getPatterns(c);
-  return c.json(patterns);
-});
-
 app.get("/patterns/:uuid", auth.authMiddleware(), async (c) => {
-  const pattern_uuid = c.req.param("uuid");
-  const patterns = await getPatterns(c);
-  const pattern = patterns.find((v) => v.uuid === pattern_uuid);
+  const patternUUID = c.req.param("uuid");
+
+  const stmt = c.env.database
+    .prepare("SELECT * FROM patterns WHERE uuid=?")
+    .bind(patternUUID);
+  let pattern: Pattern | null = await stmt.first();
 
   if (!pattern) {
-    return c.json({ error: "Not Found" }, 404);
+    return c.text(`Pattern ${patternUUID} does not exist!`, 404);
   }
 
   c.header("Cache-Control", "max-age=31536000");
@@ -153,6 +94,97 @@ app.get("/patterns/:uuid/thumb.png", auth.authMiddleware(), async (c) => {
   return c.body(objectContent);
 });
 
+app.post("/playlists", auth.authMiddleware(), async (c) => {
+  const tokenPayload = auth.getPayload(c);
+
+  if (!tokenPayload.user.is_admin) {
+    return c.json({ error: "User not admin!" }, 403);
+  }
+
+  if (!tokenPayload.user.is_active) {
+    return c.json({ error: "User not active!" }, 403);
+  }
+
+  const newPlaylist = await c.req.json<Playlist>();
+  newPlaylist.uuid = newPlaylist.uuid.toLowerCase();
+
+  const stmt = c.env.database
+    .prepare(
+      "INSERT INTO playlists (uuid,name,description,date,featured_pattern,patterns) VALUES (?,?,?,?,?,?)"
+    )
+    .bind(
+      newPlaylist.uuid,
+      newPlaylist.name,
+      newPlaylist.description,
+      newPlaylist.date,
+      newPlaylist.featured_pattern,
+      JSON.stringify(newPlaylist.patterns)
+    );
+
+  try {
+    const results = await stmt.run();
+    return c.json({ uuid: newPlaylist.uuid, meta: results.meta });
+  } catch (e) {
+    return c.json({ error: (e as Error).message }, 500);
+  }
+});
+
+app.post("/patterns", auth.authMiddleware(), async (c) => {
+  interface PostPatternBody {
+    patternData: string;
+    pattern: Pattern;
+    thumbData: string;
+  }
+
+  const tokenPayload = auth.getPayload(c);
+  if (!tokenPayload.user.is_admin) {
+    return c.json({ error: "User not admin!" }, 403);
+  }
+
+  if (!tokenPayload.user.is_active) {
+    return c.json({ error: "User not active!" }, 403);
+  }
+
+  const newPatternBody = await c.req.json<PostPatternBody>();
+  newPatternBody.pattern.uuid = newPatternBody.pattern.uuid.toLowerCase();
+
+  try {
+    const objectName = `patterns/${newPatternBody.pattern.uuid}`;
+    await c.env.bucket.put(objectName, newPatternBody.patternData);
+  } catch (e) {
+    return c.json({ error: "Couldn't store pattern!" }, 500);
+  }
+
+  try {
+    const objectName = `patterns/thumbs/${newPatternBody.pattern.uuid}.png`;
+    const buf = Buffer.from(newPatternBody.thumbData, "base64");
+    await c.env.bucket.put(objectName, buf);
+  } catch (e) {
+    return c.json({ error: "Couldn't store pattern thumbnail!" }, 500);
+  }
+
+  const newPattern = newPatternBody.pattern;
+
+  const stmt = c.env.database
+    .prepare(
+      "INSERT INTO patterns (name,uuid,popularity,date,creator) VALUES (?,?,?,?,?)"
+    )
+    .bind(
+      newPattern.name,
+      newPattern.uuid,
+      newPattern.popularity,
+      newPattern.date,
+      newPattern.creator
+    );
+
+  try {
+    const results = await stmt.run();
+    return c.json({ uuid: newPattern.uuid, meta: results.meta });
+  } catch (e) {
+    return c.json({ error: (e as Error).message }, 500);
+  }
+});
+
 app.post("/auth", async (c) => {
   interface AuthRequestBody {
     email: string;
@@ -165,22 +197,17 @@ app.post("/auth", async (c) => {
     return c.json({ error: "Malformed request" }, 400);
   }
 
-  const usersFile = await c.env.bucket.get("users.json");
-  if (!usersFile) {
-    return c.json({ error: "Couldn't retrieve users database!" }, 400);
-  }
-  const users = (await usersFile.json()) as User[];
+  const stmt = c.env.database
+    .prepare("SELECT * FROM users WHERE email=? AND password=?")
+    .bind(body.email, body.password);
+  let user: User | null = await stmt.first();
 
-  const thisUser = users.find((user) => {
-    return user.email === body.email;
-  });
-
-  if (!thisUser || body.password !== thisUser.password) {
-    return c.json({ error: "Invalid email or password" }, 401);
+  if (!user) {
+    return c.text(`Invalid email or password`, 401);
   }
 
   const tokenPayload = {
-    user: thisUser,
+    user: user,
   };
 
   const token = await auth.generateToken(tokenPayload, c.env.secretKey, "10y");
@@ -190,28 +217,16 @@ app.post("/auth", async (c) => {
   });
 });
 
-async function getPatterns(c: Context): Promise<Pattern[]> {
-  const objectName = `patterns.json`;
-  const object = await c.env.bucket.get(objectName);
-  if (object === null) {
-    throw new Error("Object not found");
-  }
-  const objectContent = await object.json();
-  return objectContent as Pattern[];
-}
-
-async function getPlaylists(c: Context): Promise<Playlist[]> {
-  const objectName = `playlists.json`;
-  const object = await c.env.bucket.get(objectName);
-  if (object === null) {
-    throw new Error("Object not found");
-  }
-  const objectContent = await object.json();
-  return objectContent as Playlist[];
-}
-
 app.notFound((c) => {
   return c.redirect("https://www.youtube.com/watch?v=FfnQemkjPjM", 302);
+});
+
+app.onError((err, c) => {
+  console.error(err);
+  return c.text(
+    "Whoops! An unhandled exception occured. We'll be looking into this issue!",
+    500
+  );
 });
 
 export default app;
