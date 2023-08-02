@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@cloudflare/workers-types@^4.20230511.0":
-  version "4.20230724.0"
-  resolved "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-4.20230724.0.tgz"
-  integrity sha512-WuFlsai21oJhRMBHdkM0saIuK1Faitp/GXWj31Zlbe3cCtPNlwYtX5WkojDNWWAxX47LMHBF9wv7wrytNLabYA==
+"@cloudflare/workers-types@^4.20230801.0":
+  version "4.20230801.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20230801.0.tgz#d23ec9671a08d91ad027fb4c783e94dee275d279"
+  integrity sha512-RzRUR+J/T3h58qbTZHYntYsnZXu3JnrlZIhqP2hhdyfoZAZ/+ko4wX0foAqlYHi+kXWaWtySHBuMcx6ec6TXlQ==
 
 "@types/bcrypt@^5.0.0":
   version "5.0.0"
@@ -84,9 +84,9 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-hono@^3.3.4:
+hono@^3.1.8:
   version "3.3.4"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-3.3.4.tgz#063655dd73e0f46a64682d65181f255551f4e6f1"
+  resolved "https://registry.npmjs.org/hono/-/hono-3.3.4.tgz"
   integrity sha512-lqvcsQrXS0bSydj/MkOXi3opAwrlauIjZefhXMMRj9prABfBWdrYHSrWk/xfxgxNPs4yuEMh2Z5zV0L2b1Jmdw==
 
 jose@^4.14.4:
