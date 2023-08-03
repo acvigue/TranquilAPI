@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@cloudflare/workers-types@^4.20230801.0":
+"@cloudflare/workers-types@^4.20230511.0":
   version "4.20230801.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20230801.0.tgz#d23ec9671a08d91ad027fb4c783e94dee275d279"
+  resolved "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-4.20230801.0.tgz"
   integrity sha512-RzRUR+J/T3h58qbTZHYntYsnZXu3JnrlZIhqP2hhdyfoZAZ/+ko4wX0foAqlYHi+kXWaWtySHBuMcx6ec6TXlQ==
 
 "@types/bcrypt@^5.0.0":
@@ -14,10 +14,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^20.4.4":
-  version "20.4.5"
-  resolved "https://registry.npmjs.org/@types/node/-/node-20.4.5.tgz"
-  integrity sha512-rt40Nk13II9JwQBdeYqmbn2Q6IVTA5uPhvSO+JVqdXw/6/4glI6oR9ezty/A9Hg5u7JH4OmYmuQ+XvjKm0Datg==
+"@types/node@*", "@types/node@^20.4.6":
+  version "20.4.6"
+  resolved "https://registry.npmjs.org/@types/node/-/node-20.4.6.tgz"
+  integrity sha512-q0RkvNgMweWWIvSMDiXhflGUKMdIxBo2M2tYM/0kEGDueQByFzK4KZAgu5YHGFNxziTlppNpTIBcqHQAxlfHdA==
 
 "@types/node@^17.0.40":
   version "17.0.45"
