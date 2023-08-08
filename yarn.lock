@@ -84,10 +84,10 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-hono@^3.1.8:
-  version "3.3.4"
-  resolved "https://registry.npmjs.org/hono/-/hono-3.3.4.tgz"
-  integrity sha512-lqvcsQrXS0bSydj/MkOXi3opAwrlauIjZefhXMMRj9prABfBWdrYHSrWk/xfxgxNPs4yuEMh2Z5zV0L2b1Jmdw==
+hono@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.4.1.tgz#1ec84b8d67b0c26a7c9cfe3e1337c6a19a15988b"
+  integrity sha512-fA7/cfgNg060mt12cYykdstwqM/bRvqYmQlPpEjoKIwMs6QF1rPJzZjppCrFuZZJvKE1vEP6kEAaaDH96XRg7Q==
 
 jose@^4.14.4:
   version "4.14.4"
