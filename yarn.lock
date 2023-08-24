@@ -14,7 +14,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^20.5.4":
+"@types/node@*", "@types/node@^20.4.4":
   version "20.5.4"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.5.4.tgz"
   integrity sha512-Y9vbIAoM31djQZrPYjpTLo0XlaSwOIsrlfE3LpulZeRblttsLQRFRlBAppW0LOxyT3ALj2M5vU1ucQQayQH3jA==
@@ -84,10 +84,10 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-hono@^3.1.8:
-  version "3.4.1"
-  resolved "https://registry.npmjs.org/hono/-/hono-3.4.1.tgz"
-  integrity sha512-fA7/cfgNg060mt12cYykdstwqM/bRvqYmQlPpEjoKIwMs6QF1rPJzZjppCrFuZZJvKE1vEP6kEAaaDH96XRg7Q==
+hono@^3.5.4:
+  version "3.5.4"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.5.4.tgz#66057d4c1ee127faafa087168af6d569ab25f5e7"
+  integrity sha512-GrRBIJhZ+tG+8RtoyPQjvqPGwppERmayyTiPKano4egmpkJf1XiptESUYK5vKHICNaJksAKB9jzy1CmOdQENPA==
 
 jose@^4.14.4:
   version "4.14.4"
