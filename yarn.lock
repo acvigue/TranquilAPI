@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@cloudflare/workers-types@^4.20230821.0":
+"@cloudflare/workers-types@^4.20230511.0":
   version "4.20230821.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20230821.0.tgz#7f9b79595c26ff544e85e1a5afa603ffd2e42ff9"
+  resolved "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-4.20230821.0.tgz"
   integrity sha512-lVQSyr5E4CEkQw7WIdsrMTj+kHjsm28mJ0B5AhNFByKR+16KTFsU/RW/nGLKHHW2jxT5lvYI+HjNQMzC9QR8Ng==
 
 "@types/bcrypt@^5.0.0":
@@ -84,9 +84,9 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-hono@^3.5.4:
+hono@^3.1.8:
   version "3.5.4"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-3.5.4.tgz#66057d4c1ee127faafa087168af6d569ab25f5e7"
+  resolved "https://registry.npmjs.org/hono/-/hono-3.5.4.tgz"
   integrity sha512-GrRBIJhZ+tG+8RtoyPQjvqPGwppERmayyTiPKano4egmpkJf1XiptESUYK5vKHICNaJksAKB9jzy1CmOdQENPA==
 
 jose@^4.14.4:
@@ -140,10 +140,10 @@ to-semver@^4.0.0:
     clean-semver "^2.1.0"
     semver "^7.3.5"
 
-typescript@^5.0.4:
-  version "5.1.6"
-  resolved "https://registry.npmjs.org/typescript/-/typescript-5.1.6.tgz"
-  integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
+typescript@^5.2.2:
+  version "5.2.2"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.2.2.tgz#5ebb5e5a5b75f085f22bc3f8460fba308310fa78"
+  integrity sha512-mI4WrpHsbCIcwT9cF4FZvr80QUeKvsUsUvKDoR+X/7XHQH98xYD8YHZg7ANtz2GtZt/CBq2QJ0thkGJMHfqc1w==
 
 yallist@^4.0.0:
   version "4.0.0"
