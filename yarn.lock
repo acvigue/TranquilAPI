@@ -14,7 +14,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^20.4.4":
+"@types/node@*":
   version "20.5.4"
   resolved "https://registry.npmjs.org/@types/node/-/node-20.5.4.tgz"
   integrity sha512-Y9vbIAoM31djQZrPYjpTLo0XlaSwOIsrlfE3LpulZeRblttsLQRFRlBAppW0LOxyT3ALj2M5vU1ucQQayQH3jA==
@@ -25,9 +25,9 @@
   integrity sha512-w+tIMs3rq2afQdsPJlODhoUEKzFP1ayaoyl1CcnwtIlsVe7K7bA1NGm4s3PraqTLlXnbIN84zuBlxBWo1u9BLw==
 
 "@types/node@^20.5.7":
-  version "20.5.7"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.7.tgz#4b8ecac87fbefbc92f431d09c30e176fc0a7c377"
-  integrity sha512-dP7f3LdZIysZnmvP3ANJYTSwg+wLLl8p7RqniVlV7j+oXSXAbt9h0WIBFmJy5inWZoX9wZN6eXx+YXd9Rh3RBA==
+  version "20.5.8"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.8.tgz#fb171fd22d37ca6e2ea97fde88e6a13ee14bc327"
+  integrity sha512-eajsR9aeljqNhK028VG0Wuw+OaY5LLxYmxeoXynIoE6jannr9/Ucd1LL0hSSoafk5LTYG+FfqsyGt81Q6Zkybw==
 
 asynckit@^0.4.0:
   version "0.4.0"
@@ -89,10 +89,10 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-hono@^3.5.4:
-  version "3.5.4"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-3.5.4.tgz#66057d4c1ee127faafa087168af6d569ab25f5e7"
-  integrity sha512-GrRBIJhZ+tG+8RtoyPQjvqPGwppERmayyTiPKano4egmpkJf1XiptESUYK5vKHICNaJksAKB9jzy1CmOdQENPA==
+hono@^3.1.8:
+  version "3.5.6"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.5.6.tgz#fe37e2fee682dc8badbde78568f365bae5c362c9"
+  integrity sha512-ycTOpIZJ6yLbjzoE+ojsesC7G7ZXfGSoCIDyvqmzlHc5Mk4Aj48Ed9R5g7gw3v7rOkS81pjcYIvWef/karq1iA==
 
 jose@^4.14.4:
   version "4.14.4"
