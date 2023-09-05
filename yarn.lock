@@ -90,9 +90,9 @@ form-data@^4.0.0:
     mime-types "^2.1.12"
 
 hono@^3.1.8:
-  version "3.5.6"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-3.5.6.tgz#fe37e2fee682dc8badbde78568f365bae5c362c9"
-  integrity sha512-ycTOpIZJ6yLbjzoE+ojsesC7G7ZXfGSoCIDyvqmzlHc5Mk4Aj48Ed9R5g7gw3v7rOkS81pjcYIvWef/karq1iA==
+  version "3.5.8"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.5.8.tgz#9bbc412f5a54183cf2a81a36a9b9ea56da10f785"
+  integrity sha512-ZipTmGfHm43q5QOEBGog2wyejyNUcicjPt0BLDQ8yz9xij/y9RYXRpR1YPxMpQqeyNM7isvpsIAe9Ems51Wq0Q==
 
 jose@^4.14.4:
   version "4.14.5"
