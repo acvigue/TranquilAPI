@@ -3,14 +3,14 @@
 
 
 "@cloudflare/workers-types@^4.20230821.0":
-  version "4.20231016.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20231016.0.tgz#f2a896f112424e0ed3956cb4ad66a2c0e07050fc"
-  integrity sha512-eGB0cRVyoJpeyGJx2re5sbd9R316a61sY73xwnqm4cwGpb+OxCK2gc651RxGiN7H4w6LY1RpysUgeGLmj5B3+g==
+  version "4.20231025.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20231025.0.tgz#ac4d7e6a346670774a7d36cce1444786607f8dfe"
+  integrity sha512-TkcZkntUTOcvJ4vgmwpNfLTclpMbmbClZCe62B25/VTukmyv91joRa4eKzSjzCZUXTbFHNmVdOpmGaaJU2U3+A==
 
 "@types/bcrypt@^5.0.0":
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/@types/bcrypt/-/bcrypt-5.0.0.tgz#a835afa2882d165aff5690893db314eaa98b9f20"
-  integrity sha512-agtcFKaruL8TmcvqbndlqHPSJgsolhf/qPWchFlgnW1gECTN/nKbFcoFnvKAQRFfKbh+BO6A3SWdJu9t+xF3Lw==
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/@types/bcrypt/-/bcrypt-5.0.1.tgz#50a6a662ad6a14c44ae7b25633cfadddf7a85f45"
+  integrity sha512-dIIrEsLV1/v0AUNI8oHMaRRTSeVjoy5ID8oclJavtPj8CwPJoD1eFoNXEypuu6k091brEzBeOo3LlxeAH9zRZg==
   dependencies:
     "@types/node" "*"
 
