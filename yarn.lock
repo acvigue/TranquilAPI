@@ -96,10 +96,10 @@ hono@^3.1.8:
   resolved "https://registry.yarnpkg.com/hono/-/hono-3.8.3.tgz#68bc5ed9908c0ae9b303aa64b4b1cd70ebb3f3fe"
   integrity sha512-NLJgUCKKMvijBy+V+U1FQTsNwHk2bD1KGlWJA9+qaCNWgx5St9bhfQwxrpcTGvG2Gi2naemTWCzBavDNXOqO6Q==
 
-jose@^4.14.4:
-  version "4.15.4"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-4.15.4.tgz#02a9a763803e3872cf55f29ecef0dfdcc218cc03"
-  integrity sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==
+jose@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.0.1.tgz#a2f0bb241ecfe6ebf37ef435498a491918a1a0e0"
+  integrity sha512-gRVzy7s3RRdGbXmcTdlOswJOjhwPLx1ijIgAqLY6ktzFpOJxxYn4l0fC2vHaHHi4YBX/5FOL3aY+6W0cvQgpug==
 
 latest-semver@^4.0.0:
   version "4.0.0"
