@@ -16,17 +16,11 @@ export const authMiddleware = (): MiddlewareHandler => {
   return async (c, next) => {
     const secret = c.env.secretKey as string;
 
-    let token = "";
-    if (!c.req.headers.has("Authorization") && !c.req.query("auth_token")) {
+    let token = c.req.header("Authorization")?.split(" ")[1] || c.req.query("auth_token");
+    if (!token) {
       return new Response("Forbidden", {
         status: 403,
       });
-    }
-
-    if (c.req.headers.has("Authorization")) {
-      token = c.req.headers.get("Authorization")!.split(" ")[1];
-    } else {
-      token = c.req.query("auth_token")!;
     }
 
     try {
