@@ -87,9 +87,9 @@ form-data@^4.0.0:
     mime-types "^2.1.12"
 
 hono@^3.11.7:
-  version "3.11.7"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-3.11.7.tgz#e44f8aa3a18f19775304328bde6f559f7a02447f"
-  integrity sha512-TcfAq7IdipF+9coxnuzYlSSBXbm9mTyWjjagLCv/2ampboNcKJdi+XCK5G48mHQtpI5+9Rj3J4FfcGgw9vzIww==
+  version "3.11.9"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.11.9.tgz#0495490442e51dac764c9064c1dfe5a6f444aeaf"
+  integrity sha512-vjwVHw/y9xXPf7a87XjAPE9d3NFLyDiDBHmTU5SsGiJoe4BSiU/Yiu5UB9orhP+YGkSwD7fzXmuG7lpvKnr15w==
 
 jose@^5.1.0:
   version "5.1.1"
