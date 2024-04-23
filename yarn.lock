@@ -86,10 +86,10 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     mime-types "^2.1.12"
 
-hono@^4.0.0:
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/hono/-/hono-4.0.7.tgz#55ffe7212e5634380fc942958932451d2b75715b"
-  integrity sha512-1fhi9MUzMIXWqPWA7OGPTpzjQupT78rf+U6N+2vxwy7U76jUX0dmkUtp572gR+dbGR1YugLYvyg/JrgPOSoutw==
+hono@^4.2.7:
+  version "4.2.7"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-4.2.7.tgz#439ae5b0fc3620f254988b228b0e0c4d91ffe367"
+  integrity sha512-k1xHi86tJnRIVvqhFMBDGFKJ8r5O+bEsT4P59ZK59r0F300Xd910/r237inVfuT/VmE86RQQffX4OYNda6dLXw==
 
 jose@^5.1.0:
   version "5.2.2"
