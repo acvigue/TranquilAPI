@@ -3,9 +3,9 @@
 
 
 "@cloudflare/workers-types@^4.20231025.0":
-  version "4.20240821.1"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20240821.1.tgz#d60219e1054f0f73e325dd11c1081df1c0d851c4"
-  integrity sha512-icAkbnAqgVl6ef9lgLTom8na+kj2RBw2ViPAQ586hbdj0xZcnrjK7P46Eu08OU9D/lNDgN2sKU/sxhe2iK/gIg==
+  version "4.20241018.0"
+  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-4.20241018.0.tgz#b37efff883f7533d3719778e2d1d99aa9e47b8b6"
+  integrity sha512-gGWumpaaqnjN/G6SI7CZQ13G4SpIUV+EM8QqvuN2D3cGDF6mKIm+ov7H4x7V/c+AdY90v0FCc8B5nmEEt90MvQ==
 
 "@types/bcrypt@^5.0.1":
   version "5.0.2"
