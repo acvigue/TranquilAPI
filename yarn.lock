@@ -92,9 +92,9 @@ hono@^4.0.0:
   integrity sha512-pqpSlcdqGkpTTRpLYU1PnCz52gVr0zVR9H5GzMyJWuKQLLEBQxh96q45QizJ2PPX8NATtz2mu31/PKW/Jt+90Q==
 
 jose@^5.1.0:
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-5.7.0.tgz#5c3a6eb811235e692e1af4891904b7b91b204f57"
-  integrity sha512-3P9qfTYDVnNn642LCAqIKbTGb9a1TBxZ9ti5zEVEr48aDdflgRjhspWFb6WM4PzAfFbGMJYC4+803v8riCRAKw==
+  version "5.9.6"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.9.6.tgz#77f1f901d88ebdc405e57cce08d2a91f47521883"
+  integrity sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==
 
 latest-semver@^4.0.0:
   version "4.0.0"
